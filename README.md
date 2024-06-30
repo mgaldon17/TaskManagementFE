@@ -8,6 +8,12 @@ This project is a simple task manager application built with [React](https://rea
 - **View Tasks**: Users can view a list of all tasks. The task list includes the task's name, status, creation date, and priority level.
 - **Update Task**: Users can update a task's status and priority level.
 - **Delete Task**: Users can delete a task.
+- 
+## Application Screenshot
+
+This is how the application looks like:
+
+![Frontend Screenshot](./public/frontend.png)
 
 ## Getting Started
 
