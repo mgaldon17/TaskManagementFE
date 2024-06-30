@@ -1,4 +1,4 @@
-# Task Manager App
+# Task Manager App Frontend 
 
 This project is a simple task manager application built with [React](https://reactjs.org/). It allows users to create, update, and view tasks. Each task has a name, a status (done or not done), a creation date, and a priority level.
 
