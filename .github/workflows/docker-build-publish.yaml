@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: ghcr.io/mgaldon17/task-management-app-fe:latest
+  IMAGE_NAME: ghcr.io/${{ secrets.GH_USER_PACKAGES }}/task-management-app-fe:latest
 
 jobs:
   build-and-push:
