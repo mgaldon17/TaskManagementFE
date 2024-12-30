@@ -3,7 +3,7 @@
 # Define variables
 IMAGE_NAME="ghcr.io/mgaldon17/task-management-app-fe:latest"
 GITHUB_USERNAME="mgaldon17"
-GITHUB_TOKEN="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"
+GITHUB_TOKEN="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"
 
 # Step 1: Build the Docker image
 docker build -t $IMAGE_NAME .
