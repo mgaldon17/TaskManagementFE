@@ -31,6 +31,10 @@
       "react-app/jest"
     ]
   },
+  "overrides": {
+    "brace-expansion": ">=1.1.12",
+    "webpack": ">=5.104.1"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
