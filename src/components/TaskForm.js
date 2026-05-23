@@ -1,44 +1,52 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import config from "../security/apiConfig";
+import PropTypes from 'prop-types';
+import { taskService } from '../services/taskService';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import Checkbox from '@mui/material/Checkbox';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import MenuItem from '@mui/material/MenuItem';
-
+import { PRIORITIES, PRIORITY_LABELS } from '../constants/priorities';
 
 const TaskForm = ({ onTaskCreated }) => {
     const [name, setName] = useState('');
     const [done, setDone] = useState(false);
     const [created, setCreated] = useState('');
     const [priority, setPriority] = useState('');
+    const [submitting, setSubmitting] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (!name.trim()) {
+            return;
+        }
+
+        if (created && isNaN(Date.parse(created))) {
+            alert('Please enter a valid date format (e.g. YYYY-MM-DD).');
+            return;
+        }
+
+        setSubmitting(true);
         try {
-            // Construct URLSearchParams object with form data
+            await taskService.createTask({
+                name,
+                done,
+                created,
+                priority,
+            });
 
-            const params = new URLSearchParams();
-            params.append('name', name);
-            params.append('done', done);
-            params.append('created', created);
-            params.append('priority', priority);
-
-            // Send POST request with URL-encoded data and Basic Auth header
-            await axios.post('/tasks', params, config);
-
-            // Call callback function to refresh task list after creation
             await onTaskCreated();
 
-            // Reset form fields
             setName('');
             setDone(false);
             setCreated('');
             setPriority('');
         } catch (error) {
             console.error('Error creating task:', error);
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -66,6 +74,7 @@ const TaskForm = ({ onTaskCreated }) => {
                 onChange={(e) => setName(e.target.value)}
                 required
                 fullWidth
+                inputProps={{ maxLength: 255 }}
             />
             <FormControlLabel
                 control={
@@ -79,10 +88,11 @@ const TaskForm = ({ onTaskCreated }) => {
             />
             <TextField
                 label="Created"
+                type="date"
                 value={created}
                 onChange={(e) => setCreated(e.target.value)}
-                required
                 fullWidth
+                InputLabelProps={{ shrink: true }}
             />
             <TextField
                 label="Priority"
@@ -93,15 +103,19 @@ const TaskForm = ({ onTaskCreated }) => {
                 fullWidth
             >
                 <MenuItem value="">Select Priority</MenuItem>
-                <MenuItem value="LOW">Low</MenuItem>
-                <MenuItem value="NORMAL">Normal</MenuItem>
-                <MenuItem value="URGENT">Urgent</MenuItem>
+                {PRIORITIES.map((p) => (
+                    <MenuItem key={p} value={p}>{PRIORITY_LABELS[p]}</MenuItem>
+                ))}
             </TextField>
-            <Button type="submit" variant="contained" color="primary">
-                Create Task
+            <Button type="submit" variant="contained" color="primary" disabled={submitting}>
+                {submitting ? 'Creating...' : 'Create Task'}
             </Button>
         </Box>
     );
+};
+
+TaskForm.propTypes = {
+    onTaskCreated: PropTypes.func.isRequired,
 };
 
 export default TaskForm;
